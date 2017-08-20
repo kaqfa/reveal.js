@@ -18,11 +18,13 @@
 
 ### Table of Contents
 
-| Data Structure  | Before Class  | After Class |
-|---------------- |-------------- |-------------|
-| List &amp; Tuple| `*args & **kwargs` | Iterator |
-| Mutability      | Generator     | Mixins      |
-| List Comprehension | Decorator    | Meta Class  |
+| Data Structure  | Function & Class |
+|:---------------:|:----------------:|
+| List &amp; Tuple| `*args & **kwargs` |
+| Mutability      | Iterator        |
+| List Comprehension | Generator    |
+| Dict Comprehension | Decorator    |
+| Subclassing Types | Mixins        |
 
 ---
 
@@ -163,7 +165,90 @@ def concatejoin(times):
 
 ---
 
-## Function Related (Before Class)
+### List Comprehension
+
+Buat perintah untuk melakukan generate list dari 1 hingga 10
+
+--
+
+### So Lame
+
+```python
+new_list = []
+for data in range(1, 11):
+    new_list.append(data)
+
+new_list
+```
+
+--
+
+### Like a Boss
+
+```python
+new_list = [data for data in range(1, 11)]
+new_list
+```
+
+--
+
+### Additional Process
+
+```python
+new_list = [data*2 for data in range(1, 11)]
+new_list
+```
+
+--
+
+### With Condition
+
+```python
+new_list = [data for data in range(1, 11) if data % 2 == 0]
+new_list
+```
+
+--
+
+### Even Nested Loops
+
+```python
+new_list = [x * y for x in [20, 40, 60] for y in [2, 4, 6]]
+new_list
+```
+
+--
+
+### So The Syntax Is
+
+```
+[ expression for item in list if conditional ]
+```
+
+---
+
+### Dict Comprehension
+
+- Dictionary juga mempunya syntax comprehension
+
+---
+
+### Subclassing Built-in Data Types
+
+- Masih belum puas dengan tipe data yang disediakan Python?
+- Kita masih bisa bikin tipe data sendiri berdasarkan tipe data yang ada
+
+--
+
+### Melakukan Override Method yang Sudah Ada
+
+--
+
+### Membuat Method Baru
+
+---
+
+# Function &amp; Class
 
 ---
 
@@ -236,68 +321,6 @@ def some_function(name, *langs, married = False, **attrs):
 
     for key, value in attrs:
         print("{}: {}".format(key, value))
-```
-
----
-
-### List Comprehension
-
-Buat perintah untuk melakukan generate list dari 1 hingga 10
-
---
-
-### So Lame
-
-```python
-new_list = []
-for data in range(1, 11):
-    new_list.append(data)
-
-new_list
-```
-
---
-
-### Like a Boss
-
-```python
-new_list = [data for data in range(1, 11)]
-new_list
-```
-
---
-
-### Additional Process
-
-```python
-new_list = [data*2 for data in range(1, 11)]
-new_list
-```
-
---
-
-### With Condition
-
-```python
-new_list = [data for data in range(1, 11) if data % 2 == 0]
-new_list
-```
-
---
-
-### Even Nested Loops
-
-```python
-new_list = [x * y for x in [20, 40, 60] for y in [2, 4, 6]]
-new_list
-```
-
---
-
-### So The Syntax Is
-
-```
-[ expression for item in list if conditional ]
 ```
 
 ---
@@ -485,18 +508,62 @@ sayo2("Fahri Firdausillah")
 
 ---
 
-### Mixins
+### Mixin (aka) Multiple Inheritance
 
-Content Mixin
+- Mixin merupakan cara python untuk menyelesaikan permasalahan dari multiple inheritance, Diamond of Death
+- Mixin digunakan untuk membuat class baru dengan kombinasi beberapa class komponen
+- Kalau di Django banyak digunakan pada Class Based View
 
----
+--
+
+```python
+class BaseClassA():
+    def method_a(self):
+        return "Method A"
+
+class BaseClassB():
+    def method_b(self):
+        return "Method B"
+
+class ChildClass(BaseClassA, BaseClassB):
+    pass
+
+child = ChildClass()
+print(child.method_a())
+print(child.method_b())
+```
+
+__
 
 ### Method Resolution Order
 
-Content MRO
+- Kunci dari Mixin adalah urutan eksekusi
+- Mixin akan dieksekusi secara urut dari kiri ke kanan
+- Sehingga jika ingin menambahkan fungsionalitas dari mixin sebelah kiri, jangan lupa untuk memanggilnya dalam mixin sebelah kanan
 
----
+--
 
-### Meta Class
+### Contoh MRO
 
-Content Meta Class
+```python
+class BaseClassA():
+    def method(self):
+        print("Method A")
+
+class BaseClassB():
+    def method(self):
+        super(BaseClassB, self).method()
+        print("Method B")
+
+class ChildClassA(BaseClassA, BaseClassB):
+    pass
+
+class ChildClassB(BaseClassB, BaseClassA):
+    pass
+
+child_a = ChildClassA()
+child_a.method()
+
+child_b = ChildClassB()
+child_b.method()
+```
