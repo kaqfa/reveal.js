@@ -26,6 +26,8 @@
 | Dict Comprehension | Decorator    |
 | Subclassing Types | Mixins        |
 
+File &amp; coding dapat diakses pada: s.id/EFg
+
 ---
 
 ### Preambule
@@ -51,6 +53,10 @@
 # Data Structure
 
 ---
+
+## List &amp; Tuple
+
+--
 
 ### List &amp; Tuple
 
@@ -84,6 +90,10 @@ a_tuple[3] = 12 # error
 ```
 
 ---
+
+## Mutable &amp; Immutable
+
+--
 
 ### Immutable types in python
 
@@ -165,6 +175,10 @@ def concatejoin(times):
 
 ---
 
+## Comprehension
+
+--
+
 ### List Comprehension
 
 Buat perintah untuk melakukan generate list dari 1 hingga 10
@@ -227,30 +241,102 @@ new_list
 
 ---
 
-### Dict Comprehension
+### Dictionary Comprehension
 
 - Dictionary juga mempunya syntax comprehension
+- Bedanya tentu saja, untuk dictionary menggunakan `{ }` bukan `[ ]`
+- Selain itu, karena Dictionary terdiri dari key:value maka nilai yang diinputkan juga harus berpasangan
+
+--
+
+### Contoh Dictionary Comprehension
+
+```python
+reset_data = { k:0 for k in ['i', 'n', 'd', 'o', 'n', 'e', 's', 'i', 'a'] }
+
+# atau lebih pendek
+reset_data = { k:0 for k in 'indonesia' }
+
+kelipatan = { k:k**2 for k in range(10) }
+```
 
 ---
+
+## Subclassing Built-in Data Types
+
+--
 
 ### Subclassing Built-in Data Types
 
 - Masih belum puas dengan tipe data yang disediakan Python?
-- Kita masih bisa bikin tipe data sendiri berdasarkan tipe data yang ada
+- Perlu diingat, bahwa di Python everything is object
+- Sehingga kita bisa bikin tipe data sendiri berdasarkan tipe data yang ada
 
 --
 
-### Melakukan Override Method yang Sudah Ada
+### Override Method
+
+Buat dictionary baru yang tidak menerima inputan value yang redundan
+
+```python
+class DistinctError(ValueError):
+    """Raised when duplicate value is added to a distinctdict."""
+
+class uniquedict(dict):
+    
+    def __setitem__(self, key, value):
+        if value in self.values():
+            if (
+                (key in self and self[key] != value) or
+                key not in self
+            ):
+                raise DistinctError("Nilai sudah digunakan oleh key lain")
+
+        super().__setitem__(key, value)
+
+ud = uniquedict()
+ud['key'] = 'value'
+ud['other_key'] = 'value'
+```
 
 --
 
 ### Membuat Method Baru
+
+Buat list baru yang memiliki unlimited nested sublist
+
+```python
+class SubList(list):
+    def __init__(self, name):
+        self.name = name
+
+    def sub(self, nesting=0):
+        offset = "  " * nesting
+        print('%s%s/' % (offset, self.name))
+
+        for element in self:
+            if hasattr(element, 'sub'):
+                element.sub(nesting + 1)
+            else:
+                print("%s  %s" % (offset, element))
+
+tree = SubList('project')
+tree.append('README.md')
+src = SubList('src')
+src.append('script.py')
+tree.append(src)
+tree.sub()
+```
 
 ---
 
 # Function &amp; Class
 
 ---
+
+## `*args` dan `**kwargs`
+
+--
 
 ### `*args` dan `**kwargs`
 
@@ -282,7 +368,7 @@ multiadds(4, 5, 6, 7, 8, 9, 10)
 
 ```python
 def men_attributes(**kwargs):
-    for key, value in kwargs:
+    for key, value in kwargs.items():
         print("Nilai dari {} adalah {}".format(key, value))
 
 men_attributes(nama="Fahri Firdausillah")
@@ -319,11 +405,15 @@ def some_function(name, *langs, married = False, **attrs):
     else:
         print("jomblo")
 
-    for key, value in attrs:
+    for key, value in attrs.items():
         print("{}: {}".format(key, value))
 ```
 
 ---
+
+## Iterator &amp; Generator
+
+--
 
 ### Iterator
 
@@ -407,6 +497,10 @@ print(y.__next__())
 - Terutama untuk generate list yang besar
 
 ---
+
+## Decorator
+
+--
 
 ### Decorator
 
@@ -506,7 +600,45 @@ greeting2("Fahri Firdausillah")
 sayo2("Fahri Firdausillah")
 ```
 
+--
+
+### Syntax Decorator dengan Parameter
+
+```python
+def outer_decorator(*outer_args,**outer_kwargs):
+    def decorator(fn):
+        def decorated(*args,**kwargs):
+            do_something(*outer_args,**outer_kwargs)
+            return fn(*args,**kwargs)
+        return decorated
+    return decorator
+```
+
+--
+
+### Contoh Decorator dengan Parameter
+
+```python
+def writen_by(writen_by):
+    def decorator(fn):
+        def decorated(*args, **kwargs):
+            print('this function writen by: {}'.format(writen_by))
+            return fn(*args, **kwargs)
+        return decorated
+    return decorator
+
+@writen_by('Fahri Firdausillah')
+def good_idea(idea):
+    return idea
+
+print(good_idea('keeping secret'))
+```
+
 ---
+
+## Mixin
+
+--
 
 ### Mixin (aka) Multiple Inheritance
 
@@ -515,6 +647,8 @@ sayo2("Fahri Firdausillah")
 - Kalau di Django banyak digunakan pada Class Based View
 
 --
+
+### Contoh Mixin
 
 ```python
 class BaseClassA():
@@ -533,7 +667,7 @@ print(child.method_a())
 print(child.method_b())
 ```
 
-__
+--
 
 ### Method Resolution Order
 
@@ -567,3 +701,31 @@ child_a.method()
 child_b = ChildClassB()
 child_b.method()
 ```
+
+---
+
+## Konsep Lain
+
+--
+
+### Yang masih Belum Dibahas
+
+- Context Manager
+- Descriptor
+- Meta Classes
+- Convention &amp; PEP
+- dan Masih Banyak Lagi
+
+--
+
+### Rekomendasi Referensi
+
+- [Learning Python](https://www.packtpub.com/application-development/learning-python)
+- [Expert Python Programming](http://www.packtpub.com/expert-python-programming/book)
+- [Writing Idiomatic Python](https://jeffknupp.com/writing-idiomatic-python-ebook/)
+- [Python Tutorial For Beginner](https://www.programiz.com/python-programming)
+- [Advanced Python Tutorial](http://herculesphaeton.com/2015/03/python-learning-advanced-level/)
+
+---
+
+## Ada pertanyaan?
